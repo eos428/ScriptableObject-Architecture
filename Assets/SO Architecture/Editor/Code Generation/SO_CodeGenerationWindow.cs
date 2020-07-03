@@ -49,9 +49,11 @@ namespace ScriptableObjectArchitecture.Editor
             false, true, false, true, false, true
         };
 
-        private int _order;
+        private int _order = 120;
+        private string _targetDirectory;
         private string _typeName;
         private string _menuName;
+        private string _namespace;
         private AnimBool _menuAnim;
         private AnimBool _clampedValueHelpBoxAnim;
 
@@ -67,24 +69,28 @@ namespace ScriptableObjectArchitecture.Editor
 
             _clampedValueHelpBoxAnim = new AnimBool();
             _clampedValueHelpBoxAnim.valueChanged.AddListener(Repaint);
-
-            _order = SOArchitecture_Settings.Instance.DefaultCreateAssetMenuOrder;
         }
         private void OnGUI()
         {
+
             TypeSelection();
 
             EditorGUILayout.Space();
 
             DataFields();
 
+            if (string.IsNullOrEmpty(_targetDirectory) || string.IsNullOrEmpty(_typeName) || string.IsNullOrEmpty(_namespace))
+                GUI.enabled = false;
+
             if (GUILayout.Button("Generate"))
             {
                 SO_CodeGenerator.Data data = new SO_CodeGenerator.Data()
                 {
                     Types = _states,
+                    TargetDirectory = _targetDirectory,
                     TypeName = _typeName,
                     MenuName = RequiresMenu() ? _menuName : default(string),
+                    Namespace = _namespace,
                     Order = _order,
                 };
 
@@ -116,8 +122,32 @@ namespace ScriptableObjectArchitecture.Editor
         {
             EditorGUILayout.LabelField("Information", EditorStyles.boldLabel);
 
+            GUI.enabled = false;
+            _targetDirectory = EditorGUILayout.TextField(new GUIContent("Target Directory"), _targetDirectory);
+            GUI.enabled = true;
+
+            if (string.IsNullOrEmpty(_targetDirectory))
+                EditorGUILayout.HelpBox("Please fill out the Target Directory.", MessageType.Error);
+
+            if (GUILayout.Button("Find Code Generation Target Folder"))
+            {
+                string directory = EditorUtility.OpenFolderPanel("Code Generation Target Directory", Application.dataPath, string.Empty);
+                _targetDirectory = directory;
+            }
+
+            EditorGUILayout.Space();
+
             // Type name.
             _typeName = EditorGUILayout.TextField(new GUIContent("Type Name", "Case sensitive, ensure exact match with actual type name"), _typeName);
+
+            if (string.IsNullOrEmpty(_typeName))
+                EditorGUILayout.HelpBox("Please fill out the Type Name", MessageType.Error);
+
+            // Namespace
+            _namespace = EditorGUILayout.TextField(new GUIContent("Namespace", "Case sensitive, ensure exact match with actual namespace"), _namespace);
+
+            if (string.IsNullOrEmpty(_namespace))
+                EditorGUILayout.HelpBox("Please fill out the Namespace", MessageType.Error);
 
             // Menu name.
             _menuAnim.target = RequiresMenu();

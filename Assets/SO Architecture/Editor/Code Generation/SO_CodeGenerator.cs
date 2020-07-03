@@ -10,19 +10,18 @@ namespace ScriptableObjectArchitecture.Editor
     {
         static SO_CodeGenerator()
         {
-            CreateTargetDirectories();
             GatherFilePaths();
         }
-        private static void CreateTargetDirectories()
+        private static void CreateTargetDirectories(string targetDirectory)
         {
             _targetDirectories = new string[TYPE_COUNT]
             {
-                Application.dataPath + "/" + SOArchitecture_Settings.Instance.CodeGenerationTargetDirectory + "/Events/Listeners",
-                Application.dataPath + "/" + SOArchitecture_Settings.Instance.CodeGenerationTargetDirectory + "/Events/Game Events",
-                Application.dataPath + "/" + SOArchitecture_Settings.Instance.CodeGenerationTargetDirectory + "/References",
-                Application.dataPath + "/" + SOArchitecture_Settings.Instance.CodeGenerationTargetDirectory + "/Collections",
-                Application.dataPath + "/" + SOArchitecture_Settings.Instance.CodeGenerationTargetDirectory + "/Events/Responses",
-                Application.dataPath + "/" + SOArchitecture_Settings.Instance.CodeGenerationTargetDirectory + "/Variables",
+                targetDirectory + "/Events/Listeners",
+                targetDirectory + "/Events/Game Events",
+                targetDirectory + "/References",
+                targetDirectory + "/Collections",
+                targetDirectory + "/Events/Responses",
+                targetDirectory + "/Variables",
             };
         }
         private static void GatherFilePaths()
@@ -68,8 +67,10 @@ namespace ScriptableObjectArchitecture.Editor
         public struct Data
         {
             public bool[] Types;
+            public string TargetDirectory;
             public string TypeName;
             public string MenuName;
+            public string Namespace;
             public int Order;
         }
 
@@ -101,13 +102,16 @@ namespace ScriptableObjectArchitecture.Editor
 
         public static void Generate(Data data)
         {
-            _replacementStrings = new string[4, 2]
+            _replacementStrings = new string[5, 2]
             {
             { "$TYPE$", data.TypeName },
             { "$TYPE_NAME$", CapitalizeFirstLetter(data.TypeName) },
             { "$MENU_NAME$", data.MenuName },
             { "$ORDER$", data.Order.ToString() },
+            { "$NAMESPACE$", data.Namespace}
             };
+
+            CreateTargetDirectories(data.TargetDirectory);
 
             for (int i = 0; i < TYPE_COUNT; i++)
             {

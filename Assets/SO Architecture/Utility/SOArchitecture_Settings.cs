@@ -81,31 +81,13 @@ namespace ScriptableObjectArchitecture
         private const string DefaultNewSettingsName = "SOArchitecture_Settings.asset";
 #endregion
 
-        public string CodeGenerationTargetDirectory
-        {
-            get { return _codeGenerationTargetDirectory; }
-            set { _codeGenerationTargetDirectory = value; }
-        }
-
         public bool CodeGenerationAllowOverwrite
         {
             get { return _codeGenerationAllowOverwrite; }
             set { _codeGenerationAllowOverwrite = value; }
         }
 
-        public int DefaultCreateAssetMenuOrder
-        {
-            get { return _defualtCreateAssetMenuOrder; }
-            set { _defualtCreateAssetMenuOrder = value; }
-        }
-
-        [SerializeField]
-        private string _codeGenerationTargetDirectory = "CODE_GENERATION";
-
         [SerializeField, Tooltip("Allow newly generated code files to overwrite existing ones")]
         private bool _codeGenerationAllowOverwrite = false;
-
-        [SerializeField]
-        private int _defualtCreateAssetMenuOrder = 120;
     }
 }

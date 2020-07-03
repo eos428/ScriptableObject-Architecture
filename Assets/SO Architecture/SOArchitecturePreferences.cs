@@ -105,15 +105,6 @@ namespace ScriptableObjectArchitecture
 
             GUI.changed = false;
 
-            // Code Generation Target Directory
-            EditorGUILayout.HelpBox(CODE_GEN_DIRECTORY_DESCRIPTION, MessageType.Info);
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField(new GUIContent(CODE_GEN_DIRECTORY_LABEL), MAX_WIDTH);
-                var directory = EditorGUILayout.TextField(settings.CodeGenerationTargetDirectory);
-                settings.CodeGenerationTargetDirectory = directory;
-            }
-
             // Code Generation Allow Overwrite
             EditorGUILayout.HelpBox(ALLOW_OVERWRITE_DESCRIPTION, MessageType.Info);
             using (new EditorGUILayout.HorizontalScope())
@@ -121,15 +112,6 @@ namespace ScriptableObjectArchitecture
                 EditorGUILayout.LabelField(new GUIContent(ALLOW_OVERWRITE_LABEL), MAX_WIDTH);
                 var newOverwrite = EditorGUILayout.Toggle(settings.CodeGenerationAllowOverwrite);
                 settings.CodeGenerationAllowOverwrite = newOverwrite;
-            }
-
-            // Default Create Asset Menu Order
-            EditorGUILayout.HelpBox(ASSET_MENU_ORDER_DESCRIPTION, MessageType.Info);
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField(ASSET_MENU_ORDER_LABEL, MAX_WIDTH);
-                var newMenuOrder = EditorGUILayout.IntField(settings.DefaultCreateAssetMenuOrder);
-                settings.DefaultCreateAssetMenuOrder = newMenuOrder;
             }
 
             if (GUI.changed)
